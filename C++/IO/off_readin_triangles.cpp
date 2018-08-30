@@ -66,7 +66,6 @@ std::list<Triangle> readOffFile(const char* off_file_name) {
 	for (int i = 0; i < n; i++) {
 		double x, y, z;
 		in_obj_file >> x >> y >> z;
-
 		printf("Point: %.1f, %.1f, %.1f\n", x, y, z);
 
 		vertices.push_back(Point(x,y,z));
@@ -77,7 +76,6 @@ std::list<Triangle> readOffFile(const char* off_file_name) {
 	for (int i = 0; i < f; i++) {
 		int a, v1, v2, v3;
 		in_obj_file >> a >> v1 >> v2 >> v3;
-
 		printf("Face vertices: %d, %d, %d\n", v1, v2, v3);
 
 		triangles.push_back(Triangle(vertices[v1], vertices[v2], vertices[v3]));
@@ -107,7 +105,6 @@ int main(int argc, char* argv[])
 		triangles.begin()->vertex(2).x(),
 		triangles.begin()->vertex(2).y(),
 		triangles.begin()->vertex(2).z());
-//	print(triangles.begin()->vertext(0));
 
 	// constructs AABB tree
 	Tree tree(triangles.begin(), triangles.end());
@@ -119,14 +116,6 @@ int main(int argc, char* argv[])
 	Ray ray_query(a, b);
 	std::cout << tree.number_of_intersected_primitives(ray_query)
 		<< " intersections(s) with ray query" << std::endl;
-
-	// compute closest point and squared distance
-	Point point_query(2.0, 2.0, 2.0);
-	Point closest_point = tree.closest_point(point_query);
-	std::cerr << "closest point is: " << closest_point << std::endl;
-	FT sqd = tree.squared_distance(point_query);
-	std::cout << "squared distance: " << sqd << std::endl;
-	std::cout << std::endl;
 
 	return EXIT_SUCCESS;
 }

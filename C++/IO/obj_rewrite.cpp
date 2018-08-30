@@ -54,13 +54,13 @@ void write_obj_file(const char* outname_prefix, int obj_id) {
 
 	//write the vertices
 	for (int v = 0; v < v_num; v++) {
-		printf("v_list[%d] = %s\n", v, v_list[v].c_str());
+		//printf("v_list[%d] = %s\n", v, v_list[v].c_str());
 		fprintf(out_obj_file, "%s\n", v_list[v].c_str());
 	}
 
 	//write the vertices
 	for (int f = 0; f < f_num; f++) {
-		printf("f_list[%d] = %s\n", f, f_list[f].c_str());
+		//printf("f_list[%d] = %s\n", f, f_list[f].c_str());
 		fprintf(out_obj_file, "%d %s\n", face_verticle_num, f_list[f].c_str());
 	}
 
@@ -69,14 +69,14 @@ void write_obj_file(const char* outname_prefix, int obj_id) {
 }
 
 
-void rewriteObjFile(const char* filename, const char* outname_prefix) {
+void rewriteObjFile(const char* filename, const char* outname_prefix, int start_id) {
 //	FILE* in_obj_file = fopen(filename, "r");
 //	if (in_obj_file == NULL)
 		//printf("The in_obj_file is invalid.\n");
 
 	string s, first_word;
 	istringstream ss;
-	int object_id = -1;
+	int object_id = start_id - 1;
 	int line_num = 0;
 
 	ifstream in_obj_file(filename);
@@ -85,7 +85,7 @@ void rewriteObjFile(const char* filename, const char* outname_prefix) {
 		ss.clear();
 		ss.str(s);
 		ss >> first_word;
-		printf("Line %d: %s, first_word = %s\n", line_num, s.c_str(), first_word.c_str());
+		//printf("Line %d: %s, first_word = %s\n", line_num, s.c_str(), first_word.c_str());
 		line_num++;
 
 		if (first_word == "v") {
@@ -93,12 +93,12 @@ void rewriteObjFile(const char* filename, const char* outname_prefix) {
 			ss >> x >> y >> z;
 			verticle = x + " " + y + " " + z;
 			v_list.push_back(verticle);
-			printf("The last v_list element: %s\n", verticle.c_str());
+			//printf("The last v_list element: %s\n", verticle.c_str());
 		}
 
 		else if (first_word == "o") {
 
-			if(object_id >= 0)
+			if(object_id >= start_id)
 				write_obj_file(outname_prefix, object_id);
 			
 			object_id++;
@@ -119,7 +119,7 @@ void rewriteObjFile(const char* filename, const char* outname_prefix) {
 
 			face = v1_split[0] + " " + v2_split[0] + " " + v3_split[0];		
 			f_list.push_back(face);
-			printf("The last f_list element: %s\n", face.c_str());
+			//printf("The last f_list element: %s\n", face.c_str());
 		}
 
 		else
@@ -131,12 +131,14 @@ void rewriteObjFile(const char* filename, const char* outname_prefix) {
 }
 
 
-int main() {
+int main(int argc, char* argv[]) {
 	char* in_obj_file_name = new char[200];
 	char* outname_prefix   = new char[200];
 
-	sprintf(in_obj_file_name, "../data/house.obj");
-	sprintf(outname_prefix, "../data/obj_files/object_");
+	sprintf(in_obj_file_name, "%s", argv[1]);
+	sprintf(outname_prefix, "%s", argv[2]);
 
-	rewriteObjFile(in_obj_file_name, outname_prefix);
+	int start_id = atoi(argv[3]);
+
+	rewriteObjFile(in_obj_file_name, outname_prefix, start_id);
 }
